@@ -63,7 +63,42 @@ def handle_incoming_xy(msg):
 
     vel_pub.publish(vel_msg)
 
+def handle_incoming_xy2(msg):
+    vel_msg = Twist()
+    vel_msg.linear.x = 0.2
+    vel_msg.angular.z = 0.2
 
+    print('Receiving command', msg)
+
+    args = msg.split(',')
+    speed_level = int(args[7])
+    x = float(args[5])
+    y = float(args[6])
+    deg = xy2deg(x,y)
+
+    print(deg)
+
+    vel_msg.linear.x = speed_level * vel_msg.linear.x
+    vel_msg.angular.z = speed_level * vel_msg.angular.z
+
+
+    delta = 15
+    if (45 + delta) <= deg <= (135 - delta): # forward
+        vel_msg.angular.z = 0
+    elif (225 + delta) <= deg <= (315 - delta): #backward
+        vel_msg.angular.z = 0
+        vel_msg.linear.x  = -vel_msg.linear.x
+    elif (135 - delta) <= deg <= (225 + delta): #left
+        # vel_msg.linear.x = 0
+        if deg >= 180:
+            vel_msg.linear.x = -vel_msg.linear.x
+    else: #right
+        # vel_msg.linear.x = 0
+        if 270 <= deg <= 360:
+            vel_msg.linear.x = -vel_msg.linear.x
+        vel_msg.angular.z = -vel_msg.angular.z
+
+    vel_pub.publish(vel_msg)
 
 if __name__ == '__main__':
     rospy.init_node('js_remote', anonymous=True)
@@ -79,5 +114,5 @@ if __name__ == '__main__':
         data = conn.recv(1024)
         if not data:
             continue
-        handle_incoming_xy(data)
+        handle_incoming_xy2(data)
     s.close()
