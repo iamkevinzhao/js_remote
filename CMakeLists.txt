@@ -160,6 +160,7 @@ include_directories(
 ## in contrast to setup.py, you can choose the destination
 install(PROGRAMS
   scripts/server.py
+  scripts/car.py
   scripts/client.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
