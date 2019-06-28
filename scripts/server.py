@@ -92,10 +92,12 @@ def handle_incoming_xy2(msg):
         # vel_msg.linear.x = 0
         if deg >= 180:
             vel_msg.linear.x = -vel_msg.linear.x
+            vel_msg.angular.z = -vel_msg.angular.z
     else: #right
         # vel_msg.linear.x = 0
         if 270 <= deg <= 360:
             vel_msg.linear.x = -vel_msg.linear.x
+            vel_msg.angular.z = -vel_msg.angular.z
         vel_msg.angular.z = -vel_msg.angular.z
 
     vel_pub.publish(vel_msg)
