@@ -76,8 +76,6 @@ def handle_incoming_xy2(msg):
     y = float(args[6])
     deg = xy2deg(x,y)
 
-    print(deg)
-
     vel_msg.linear.x = speed_level * vel_msg.linear.x
     vel_msg.angular.z = speed_level * vel_msg.angular.z
 
@@ -89,13 +87,17 @@ def handle_incoming_xy2(msg):
         vel_msg.angular.z = 0
         vel_msg.linear.x  = -vel_msg.linear.x
     elif (135 - delta) <= deg <= (225 + delta): #left
+        if (180 - (45 - delta)) <= deg <= (180 + (45 - delta)):
+            vel_msg.linear.x = 0
         # vel_msg.linear.x = 0
-        if deg >= 180:
+        elif deg >= 180:
             vel_msg.linear.x = -vel_msg.linear.x
             vel_msg.angular.z = -vel_msg.angular.z
     else: #right
-        # vel_msg.linear.x = 0
-        if 270 <= deg <= 360:
+        if (360 - (45 - delta)) <= deg or deg <= (45 - deg):
+            vel_msg.linear.x = 0
+
+        elif 270 <= deg <= 360:
             vel_msg.linear.x = -vel_msg.linear.x
             vel_msg.angular.z = -vel_msg.angular.z
         vel_msg.angular.z = -vel_msg.angular.z
