@@ -13,6 +13,7 @@ def xy2deg(x, y):
 def handle_incoming_car(msg):
 
     control = Control()
+    control.shift_gears = 2
 
     print('Receiving command', msg)
 
@@ -24,22 +25,19 @@ def handle_incoming_car(msg):
 
     delta = 15
     if (45 + delta) <= deg <= (135 - delta): # forward
-        control.throttle = 0.5
+        control.throttle = 0.2 * speed_level
     elif (225 + delta) <= deg <= (315 - delta): #backward
         control.brake = 1.0
     elif (135 - delta) <= deg <= (225 + delta): #left
-        control.throttle = 0.5
-        control.steer = 0.5
-        # if deg >= 180:
-        #     vel_msg.linear.x = -vel_msg.linear.x
-        #     vel_msg.angular.z = -vel_msg.angular.z
+        control.throttle = 0.2 * speed_level
+        control.steer = 0.2 * speed_level
+        if deg >= 180:
+            control.shift_gears = 3
     else: #right
-        control.throttle = 0.5
-        control.steer = -0.5
-        # if 270 <= deg <= 360:
-        #     vel_msg.linear.x = -vel_msg.linear.x
-        #     vel_msg.angular.z = -vel_msg.angular.z
-        # vel_msg.angular.z = -vel_msg.angular.z
+        control.throttle = 0.2 * speed_level
+        control.steer = -0.2 * speed_level
+        if 270 <= deg <= 360:
+            control.shift_gears = 3
 
     vel_pub.publish(control)
 
